@@ -89,18 +89,7 @@ composeFormat ::
 composeFormat (Format f) (Format g) =
   Format (\callback -> f $ \fValue -> g $ \gValue -> callback $ fValue <> gValue)
 
--- | Note to interested readers: `Format` should be a `Semigroupoid` -
--- | and hence composable with `<<<` for any format of type `forall m r
--- | f. Semigroupoid m => Format m r f`
--- |
--- | However, I don't know how to persuade PureScript of that. Or even
--- | if it's valid to say, "This is a member of that category,
--- | provided you meet my extra constraints..."
--- |
--- | Nevertheless, for the most common format - the one that yields
--- | `String`s, it's composable. And that probably all most people
--- | will care about.
-instance formatSemigroupoid :: Semigroupoid (Format String) where
+instance formatSemigroupoid :: Semigroup m => Semigroupoid (Format m) where
   compose = composeFormat
 
 -- | Turns a `Format` into the underlying function it has built up.
